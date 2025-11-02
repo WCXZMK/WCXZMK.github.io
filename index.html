@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节日祝福</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B8B',
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .popup-shadow {
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            }
+            .main-gradient {
+                background: linear-gradient(135deg, #FFE5E5 0%, #FFE5F5 100%);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen main-gradient flex items-center justify-center p-4">
+    <!-- 主窗口 -->
+    <div id="main-container" class="text-center bg-white rounded-2xl p-10 max-w-md w-full shadow-xl transform transition-all duration-500">
+        <div class="mb-8 text-primary text-5xl">
+            <i class="fa fa-gift animate-pulse"></i>
+        </div>
+        <h1 class="text-[clamp(1.5rem,5vw,2rem)] font-bold text-gray-800 mb-6">节日快乐！</h1>
+        <p class="text-gray-600 text-lg mb-8">愿你每天都充满阳光与喜悦！</p>
+        <button id="receive-btn" class="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50">
+            接收祝福
+        </button>
+    </div>
+
+    <script>
+        // 祝福语列表
+        const TEXT_LIST = [
+            "晚风绕开云朵，偷偷吻了你额头", "你眼里的星星，比银河更璀璨", "每朵云都在替我，说声喜欢你",
+            "奶茶的甜，不及你笑的万分之一", "路边的花为你开，晚风为你停", "草稿本里藏的不是公式，是你的名字",
+            "月亮在贩售温柔，我在贩售对你的偏爱", "你站在那里，就是整个春天的样子", "口袋里的糖分你一半，快乐分你全部",
+            "星星掉进海里，你掉进我心里的柔软", "连打哈欠的弧度，都刚好长在我审美上", "风把烦恼吹到九霄，把你吹到我身边",
+            "日落是橘子味的，你是心动味的", "你笑时，世界的灰度都降成了彩色", "耳机分你一半，从此歌单有了共同意义",
+            "落叶写了封秋信，落款是“想见你”", "咖啡加了双倍奶泡，像你加了双倍可爱", "连影子都在模仿，我看你时的温柔",
+            "把不开心折成纸飞机，让它载着烦恼飞走", "你眨眼的瞬间，我翻阅了整个银河的浪漫",
+            "蝉鸣藏着夏的秘密，我藏着喜欢你的秘密", "每一步靠近，都像踩在棉花糖的甜蜜里"
+        ];
+
+        // 背景颜色列表
+        const COLOR_LIST = [
+            "#FFE5E5", "#E5F3FF", "#E5FFEE", "#FFF9E5",
+            "#FFE5F5", "#F5E5FF", "#E5FFFB", "#FFF0E5"
+        ];
+
+        // 配置参数
+        const POPUP_COUNT = 50;
+        const POPUP_INTERVAL = 100; // 毫秒
+        const POPUP_SCALE = 1.2;
+
+        // 接收祝福按钮点击事件
+        document.getElementById('receive-btn').addEventListener('click', () => {
+            // 隐藏主窗口
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.classList.add('opacity-0', 'scale-90');
+            setTimeout(() => mainContainer.style.display = 'none', 500);
+            
+            // 开始显示弹窗
+            startPopups();
+        });
+
+        // 创建单个弹窗
+        function createPopup() {
+            const popup = document.createElement('div');
+            const text = TEXT_LIST[Math.floor(Math.random() * TEXT_LIST.length)];
+            const bgColor = COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)];
+            
+            // 计算弹窗尺寸
+            const width = 190 * POPUP_SCALE;
+            const height = 65 * POPUP_SCALE;
+            
+            // 计算随机位置（避免超出屏幕）
+            const maxX = window.innerWidth - width - 20;
+            const maxY = window.innerHeight - height - 20;
+            const x = Math.floor(Math.random() * maxX) + 10;
+            const y = Math.floor(Math.random() * maxY) + 10;
+            
+            // 设置弹窗样式
+            popup.className = 'fixed popup-shadow rounded-lg transition-all duration-300 transform hover:scale-105 z-50';
+            popup.style.width = `${width}px`;
+            popup.style.height = `${height}px`;
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+            popup.style.backgroundColor = bgColor;
+            popup.style.padding = '12px';
+            popup.style.fontFamily = '微软雅黑, sans-serif';
+            popup.style.fontSize = `${14 * POPUP_SCALE}px`;
+            popup.style.border = '2px solid #eee';
+            popup.style.display = 'flex';
+            popup.style.alignItems = 'center';
+            popup.style.justifyContent = 'center';
+            popup.style.textAlign = 'center';
+            popup.style.opacity = '0';
+            
+            // 设置弹窗内容
+            popup.textContent = text;
+            
+            // 添加到页面
+            document.body.appendChild(popup);
+            
+            // 淡入动画
+            setTimeout(() => {
+                popup.style.opacity = '1';
+            }, 10);
+            
+            // 5秒后自动淡出并移除
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(popup)) {
+                        document.body.removeChild(popup);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // 批量创建弹窗
+        function startPopups() {
+            for (let i = 0; i < POPUP_COUNT; i++) {
+                // 每5个弹窗增加一点延迟，避免系统卡顿
+                const delay = i * POPUP_INTERVAL + (i % 5 === 0 && i !== 0 ? 500 : 0);
+                setTimeout(createPopup, delay);
+            }
+        }
+    </script>
+</body>
+</html>
